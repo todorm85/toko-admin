@@ -75,12 +75,11 @@ function unlock-allFiles ($path) {
         throw "The supplied path `"$path`" was not found.";
     }
     
-    $handlesPath = "$PSScriptRoot\..\external-tools\handle.exe"
-    if (!$handlesPath) {
+    if (!(Test-Path $handleToolPath)) {
         Write-Error "Handles tool not found. Unlocking open files will not work. Project files might need to be cleaned up manually if opened."
     }
     
-    $handlesList = execute-native "& `"$handlesPath`" /accepteula `"$path`""
+    $handlesList = execute-native "& `"$handleToolPath`" /accepteula `"$path`""
     $pids = New-Object -TypeName System.Collections.ArrayList
     $handlesList | ForEach-Object { 
         $isFound = $_ -match "^.*pid: (?<pid>.*?) .*$"
