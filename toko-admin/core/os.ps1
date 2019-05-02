@@ -2,7 +2,7 @@ $Script:hostsPath = "$($env:windir)\system32\Drivers\etc\hosts"
 
 # Get the Handle.exe tool by Sysinternals
 $handleLink = "https://download.sysinternals.com/files/Handle.zip"
-$handleExternalToolsDir = "$PSScriptRoot\..\external-tools\handle"
+$handleExternalToolsDir = "$Script:externalToolsPath\handle"
 if (!(Test-Path $handleExternalToolsDir)) {
     New-Item -Path $handleExternalToolsDir -ItemType Directory
 }

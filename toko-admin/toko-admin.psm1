@@ -2,18 +2,19 @@ function _Load-ScriptFiles ($path) {
     
 }
 
-# init external tools dir
-$toolsPath = "$PSScriptRoot\external-tools"
-if (!(Test-Path $toolsPath)) {
-    New-Item -Path $toolsPath -ItemType Directory
-}
-
-# load config
+# init module user dir
 $script:moduleUserDir = "$Global:HOME\documents\toko-admin"
 if (-not (Test-Path $moduleUserDir)) {
     New-Item -Path $moduleUserDir -ItemType Directory
 }
 
+# init external tools dir
+$Script:externalToolsPath = "$script:moduleUserDir\external-tools"
+if (!(Test-Path $Script:externalToolsPath)) {
+    New-Item -Path $Script:externalToolsPath -ItemType Directory
+}
+
+# load config
 $defaultConfigPth = "$PSScriptRoot\default_config.json"
 $Script:userConfigPath = "$moduleUserDir\config.json"
 $Script:config = get-userConfig -defaultConfigPath $defaultConfigPth -userConfigPath $userConfigPath

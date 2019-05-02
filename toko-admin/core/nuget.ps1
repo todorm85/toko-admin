@@ -1,11 +1,11 @@
 # Get Nuget.exe
 $nugetDownloadLink = "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe"
-$toolDir = "$PSScriptRoot\..\external-tools\nuget"
+$toolDir = "$Script:externalToolsPath\nuget"
 if (!(Test-Path $toolDir)) {
     New-Item -Path $toolDir -ItemType Directory
 }
 
-$nugetExePath = "$toolDir\nuget.exe"
+$Script:nugetExePath = "$toolDir\nuget.exe"
 if (!(Test-Path $nugetExePath)) {
     try {
         Invoke-WebRequest -Uri $nugetDownloadLink -OutFile $nugetExePath
@@ -16,5 +16,5 @@ if (!(Test-Path $nugetExePath)) {
 }
 
 function clear-nugetCache {
-    execute-native "& `"$($PSScriptRoot)\..\external-tools\nuget\nuget.exe`" locals all -clear"
+    execute-native "& `"$Script:nugetExePath`" locals all -clear"
 }
