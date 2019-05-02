@@ -20,6 +20,7 @@
             ReleaseNotes = @'
 ## 0.1.3
 Add user configuration for tfPath
+Fix: default credentials not found for sql and server name for TFS
 ## 0.1.2
 Fixed unlocking files
 ## 0.1.1
