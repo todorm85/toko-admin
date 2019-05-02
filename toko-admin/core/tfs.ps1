@@ -1,5 +1,5 @@
-function tfs-get-workspaces {
-    $workspacesQueryResult = tf-query-workspaces
+function tfs-get-workspaces ($server) {
+    $workspacesQueryResult = tf-query-workspaces $server
     $lines = $workspacesQueryResult | % { $_ }
     for ($i = 3; $i -lt $lines.Count; $i++) {
         $lines[$i].Split(' ')[0]
@@ -15,9 +15,9 @@ function _get-tfPath {
     $path
 }
 
-function tf-query-workspaces {
+function tf-query-workspaces ($server) {
     try {
-        execute-native "& `"$(_get-tfPath)`" workspaces /server:$Global:tfsServerName"
+        execute-native "& `"$(_get-tfPath)`" workspaces /server:$server"
     }
     catch {
         Write-Warning "Error querying tf.exe `n $_"
@@ -27,30 +27,33 @@ function tf-query-workspaces {
 
 function tfs-delete-workspace {
     Param(
-        [Parameter(Mandatory=$true)][string]$workspaceName)
+        [Parameter(Mandatory=$true)][string]$workspaceName,
+        [Parameter(Mandatory=$true)][string]$server
+        )
 
-    execute-native "& `"$(_get-tfPath)`" workspace $workspaceName /delete /noprompt /server:$Global:tfsServerName" > $null
+    execute-native "& `"$(_get-tfPath)`" workspace $workspaceName /delete /noprompt /server:$server" > $null
 }
 
 function tfs-create-workspace {
     Param(
         [Parameter(Mandatory=$true)][string]$workspaceName,
-        [Parameter(Mandatory=$true)][string]$path
+        [Parameter(Mandatory=$true)][string]$path,
+        [Parameter(Mandatory=$true)][string]$server
         )
     
     # needed otherwise if the current location is mapped to a workspace the command will throw
     Set-Location $path
 
-    execute-native "& `"$(_get-tfPath)`" workspace `"$workspaceName`" /new /permission:private /noprompt /server:$Global:tfsServerName" > $null
+    execute-native "& `"$(_get-tfPath)`" workspace `"$workspaceName`" /new /permission:private /noprompt /server:$server" > $null
     
     Start-Sleep -m 1000
 
     try {
-        execute-native "& `"$(_get-tfPath)`" workfold /unmap `"$/`" /workspace:$workspaceName /server:$Global:tfsServerName" > $null
+        execute-native "& `"$(_get-tfPath)`" workfold /unmap `"$/`" /workspace:$workspaceName /server:$server" > $null
     }
     catch {
         try {
-            tfs-delete-workspace $workspaceName
+            tfs-delete-workspace $workspaceName $server
         } 
         catch {
             throw "Workspace created but... Error removing default workspace mapping $/. Message: $_"
@@ -63,13 +66,14 @@ function tfs-create-workspace {
 function tfs-rename-workspace {
     Param(
         [Parameter(Mandatory=$true)][string]$path,
-        [Parameter(Mandatory=$true)][string]$newWorkspaceName
+        [Parameter(Mandatory=$true)][string]$newWorkspaceName,
+        [Parameter(Mandatory=$true)][string]$server
         )
     
     try {
         $oldLocation = Get-Location
         Set-Location $path
-        execute-native "& `"$(_get-tfPath)`" workspace /newname:$newWorkspaceName /noprompt /server:$Global:tfsServerName"
+        execute-native "& `"$(_get-tfPath)`" workspace /newname:$newWorkspaceName /noprompt /server:$server"
         Set-Location $oldLocation
     }
     catch {
@@ -82,7 +86,8 @@ function tfs-create-mappings {
     Param(
         [Parameter(Mandatory=$true)][string]$branch,
         [Parameter(Mandatory=$true)][string]$branchMapPath,
-        [Parameter(Mandatory=$true)][string]$workspaceName
+        [Parameter(Mandatory=$true)][string]$workspaceName,
+        [Parameter(Mandatory=$true)][string]$server
         )
 
     # if (Test-Path -Path $branchMapPath) {
@@ -95,7 +100,7 @@ function tfs-create-mappings {
     #     throw "could not create directory $branchMapPath"
     # }
     try {
-        execute-native "& `"$(_get-tfPath)`" workfold /map `"$branch`" `"$branchMapPath`" /workspace:$workspaceName /server:$Global:tfsServerName" > $null
+        execute-native "& `"$(_get-tfPath)`" workfold /map `"$branch`" `"$branchMapPath`" /workspace:$workspaceName /server:$server" > $null
     }
     catch {
         Remove-Item $branchMapPath -force
@@ -143,7 +148,7 @@ function tfs-get-latestChanges {
         $output = execute-native "& `"$(_get-tfPath)`" get" -successCodes @(1)
     }
 
-    if ($global:LASTEXITCODE -eq 1) {
+    if ($Script:LASTEXITCODE -eq 1) {
         $output -match ".*?(?<conflicts>\d+) conflicts, \d+ warnings, (?<errors>\d+) errors.*"
         $conflictsCount = 0
         if ($Matches.conflicts) {
@@ -230,7 +235,7 @@ function tfs-get-branchPath {
     }
     catch {
         Set-Location $oldLocation
-        if ($global:LASTEXITCODE -eq 100) {
+        if ($Script:LASTEXITCODE -eq 100) {
             $wsInfo = ''
         } else {
             throw $_

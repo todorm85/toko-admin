@@ -83,7 +83,7 @@ InModuleScope toko-admin {
         Mock execute-native { }
 
         It "creates workspace correctly" {
-            { tfs-create-workspace "testName" "dummy path" } | Should -Not -Throw
+            { tfs-create-workspace "testName" "dummy path" -server "dummy" } | Should -Not -Throw
             Assert-MockCalled tfs-delete-workspace -Times 0
         }
 
@@ -91,7 +91,7 @@ InModuleScope toko-admin {
             Mock execute-native { throw 'dummy' } -ParameterFilter { $command -and $command.Contains("/new") }
 
             It "stops execution" {
-                { tfs-create-workspace "testName" "dummy path" } | Should -Throw "dummy"
+                { tfs-create-workspace "testName" "dummy path" -server "dummy" } | Should -Throw "dummy"
                 Assert-MockCalled execute-native -Times 1 -ParameterFilter { $command -and $command.Contains("/new")}
                 Assert-MockCalled execute-native -Times 0 -ParameterFilter { $command -and $command.Contains("/unmap")}
                 Assert-MockCalled tfs-delete-workspace -Times 0
@@ -101,7 +101,7 @@ InModuleScope toko-admin {
         Context "unmapping default path fails" {
             Mock execute-native { throw 'dummy' } -ParameterFilter { $command -and $command.Contains("/unmap") }
 
-            { tfs-create-workspace "testName" "dummy path" } | Should -Throw "WORKSPACE NOT CREATED!"
+            { tfs-create-workspace "testName" "dummy path" -server "dummy" } | Should -Throw "WORKSPACE NOT CREATED!"
 
             It "tries to delete workspace" {
                 Assert-MockCalled execute-native -Times 1 -ParameterFilter { $command -and $command.Contains("/new")}
@@ -114,7 +114,7 @@ InModuleScope toko-admin {
             Mock execute-native { throw 'dummy' } -ParameterFilter { $command -and $command.Contains("/unmap") }
             Mock tfs-delete-workspace { throw "delete failed" } 
 
-            { tfs-create-workspace "testName" "dummy path" } | Should -Throw "Workspace created but... "
+            { tfs-create-workspace "testName" "dummy path" -server "dummy" } | Should -Throw "Workspace created but... "
 
             It "tries to delete workspace" {
                 Assert-MockCalled execute-native -Times 1 -ParameterFilter { $command -and $command.Contains("/new")}
@@ -129,33 +129,33 @@ InModuleScope toko-admin {
         $anyPath = "\"
 
         It "does not throw when native call succeeds without errors" {
-            Mock execute-native { $Global:LASTEXITCODE = 0; return "ontend\SocialShare  ---- Summary: 0 conflicts, 0 warnings, 0 errors ----" }
+            Mock execute-native { $Script:LASTEXITCODE = 0; return "ontend\SocialShare  ---- Summary: 0 conflicts, 0 warnings, 0 errors ----" }
             tfs-get-latestChanges $anyPath
         }
         It "returns output when native call succeeds without errors" {
             $mockedTfOutput = "ontend\SocialShare  ---- Summary: 0 conflicts, 0 warnings, 0 errors ----"
-            Mock execute-native { $Global:LASTEXITCODE = 0; return $mockedTfOutput }
+            Mock execute-native { $Script:LASTEXITCODE = 0; return $mockedTfOutput }
             $output = tfs-get-latestChanges $anyPath
             $output | Should -be $mockedTfOutput
         }
         It "does not throw when only warnings" {
-            Mock execute-native { $Global:LASTEXITCODE = 1; return "ontend\SocialShare  ---- Summary: 0 conflicts, 1 warnings, 0 errors ----" }
+            Mock execute-native { $Script:LASTEXITCODE = 1; return "ontend\SocialShare  ---- Summary: 0 conflicts, 1 warnings, 0 errors ----" }
             tfs-get-latestChanges $anyPath
          }
         It "throws when conflicts" { 
-            Mock execute-native { $Global:LASTEXITCODE = 1; return "ontend\SocialShare  ---- Summary: 1 conflicts, 0 warnings, 0 errors ----" }
+            Mock execute-native { $Script:LASTEXITCODE = 1; return "ontend\SocialShare  ---- Summary: 1 conflicts, 0 warnings, 0 errors ----" }
             { tfs-get-latestChanges $anyPath } | Should -Throw "There were 1 conflicts when getting latest."
         }
         It "throws when conflicts and warnings" { 
-            Mock execute-native { $Global:LASTEXITCODE = 1; return "ontend\SocialShare  ---- Summary: 1 conflicts, 1 warnings, 0 errors ----" }
+            Mock execute-native { $Script:LASTEXITCODE = 1; return "ontend\SocialShare  ---- Summary: 1 conflicts, 1 warnings, 0 errors ----" }
             { tfs-get-latestChanges $anyPath } | Should -Throw "There were 1 conflicts when getting latest."
         }
         It "throws when errors" { 
-            Mock execute-native { $Global:LASTEXITCODE = 1; return "ontend\SocialShare  ---- Summary: 0 conflicts, 0 warnings, 1 errors ----" }
+            Mock execute-native { $Script:LASTEXITCODE = 1; return "ontend\SocialShare  ---- Summary: 0 conflicts, 0 warnings, 1 errors ----" }
             {tfs-get-latestChanges $anyPath} | Should -Throw "There were 1 errors when getting latest."
         }
         It "throws when errors and warnings" { 
-            Mock execute-native { $Global:LASTEXITCODE = 1; return "ontend\SocialShare  ---- Summary: 0 conflicts, 3 warnings, 5 errors ----" }
+            Mock execute-native { $Script:LASTEXITCODE = 1; return "ontend\SocialShare  ---- Summary: 0 conflicts, 3 warnings, 5 errors ----" }
             {tfs-get-latestChanges $anyPath} | Should -Throw "There were 5 errors when getting latest."
         }
     }

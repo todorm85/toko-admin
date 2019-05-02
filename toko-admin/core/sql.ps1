@@ -12,8 +12,8 @@ function _sql-load-module {
 function sql-delete-database {
     Param (
         [Parameter(Mandatory = $true)][string] $dbName,
-        [string] $user = $global:sqlUser,
-        [string] $pass = $Global:sqlPass
+        [string] $user,
+        [string] $pass
     )
 
     _sql-load-module
@@ -31,8 +31,8 @@ function sql-rename-database {
     Param (
         [Parameter(Mandatory = $true)][string] $oldName,
         [Parameter(Mandatory = $true)][string] $newName,
-        [string] $user = $global:sqlUser,
-        [string] $pass = $Global:sqlPass
+        [string] $user,
+        [string] $pass
     )
 
     _sql-load-module
@@ -49,8 +49,8 @@ function sql-rename-database {
 
 function sql-get-dbs {
     Param (
-        [string] $user = $global:sqlUser,
-        [string] $pass = $Global:sqlPass
+        [Parameter(Mandatory=$true)][string] $user,
+        [Parameter(Mandatory=$true)][string] $pass
     )
 
     _sql-load-module
@@ -62,8 +62,9 @@ function sql-get-dbs {
 
 function sql-get-items {
     Param($dbName, $tableName, $selectFilter, $whereFilter,
-        [string] $user = $global:sqlUser,
-        [string] $pass = $Global:sqlPass)
+        [string] $user,
+        [string] $pass
+    )
 
     _sql-load-module
 
@@ -77,8 +78,9 @@ function sql-get-items {
 
 function sql-update-items {
     Param($dbName, $tableName, $value, $whereFilter,
-    [string] $user = $Global:sqlUser,
-    [string] $pass = $Global:sqlPass)
+        [string] $user,
+        [string] $pass
+    )
 
     _sql-load-module
 
@@ -92,8 +94,8 @@ function sql-update-items {
 
 function sql-insert-items {
     Param($dbName, $tableName, $columns, $values,
-    [string] $user = $Global:sqlUser,
-    [string] $pass = $Global:sqlPass)
+    [string] $user,
+    [string] $pass)
 
     _sql-load-module
 
@@ -106,8 +108,8 @@ function sql-insert-items {
 
 function sql-delete-items {
     Param($dbName, $tableName, $whereFilter,
-    [string] $user = $Global:sqlUser,
-    [string] $pass = $Global:sqlPass)
+    [string] $user,
+    [string] $pass)
 
     _sql-load-module
 
@@ -119,8 +121,8 @@ function sql-delete-items {
 function sql-test-isDbNameDuplicate {
     Param(
         [string]$dbName,
-        [string] $user = $global:sqlUser,
-        [string] $pass = $Global:sqlPass
+        [string] $user,
+        [string] $pass
         )
 
     _sql-load-module
@@ -141,8 +143,8 @@ function sql-copy-db {
     Param(
         [string]$SourceDBName, 
         [string]$targetDbName,
-        [string] $user = $global:sqlUser,
-        [string] $pass = $Global:sqlPass
+        [string] $user,
+        [string] $pass
     )
     #import SQL Server module
     _sql-load-module
@@ -151,8 +153,8 @@ function sql-copy-db {
     $connection = [Microsoft.SqlServer.Management.Common.ServerConnection]::new()
     $connection.ServerInstance = $sqlServerInstance
     $connection.LoginSecure = $false
-    $connection.Login = $global:sqlUser
-    $connection.Password = $global:sqlPass
+    $connection.Login = $user
+    $connection.Password = $pass
     $Server = [Microsoft.SqlServer.Management.Smo.Server]::new($connection)
 
     #create SMO handle to your database
@@ -183,8 +185,8 @@ function sql-copy-db {
     $ObjTransfer.DestinationServer = $sqlServerInstance
     $ObjTransfer.DestinationLoginSecure = $false
     $ObjTransfer.CopySchema = $true
-    $ObjTransfer.DestinationLogin = $global:sqlUser
-    $ObjTransfer.DestinationPassword = $Global:sqlPass
+    $ObjTransfer.DestinationLogin = $user
+    $ObjTransfer.DestinationPassword = $pass
 
     #if you wish to just generate the copy script
     #just script out the transfer
@@ -193,32 +195,4 @@ function sql-copy-db {
     #When you are ready to bring the data and schema over,
     #you can use the TransferData method
     $ObjTransfer.TransferData()
-}
-
-function sql-create-login {
-    Param(
-        $name,
-        [string] $user = $global:sqlUser,
-        [string] $pass = $Global:sqlPass
-    )
-    _sql-load-module
-    
-    $sqlServer = New-Object Microsoft.SqlServer.Management.Smo.Server -ArgumentList '.'
-    $SQLWindowsLogin = [Microsoft.SqlServer.Management.Smo.Login]::New($sqlServer, $name)
-    $SQLWindowsLogin.LoginType = [Microsoft.SqlServer.Management.Smo.LoginType]::WindowsUser
-    $SQLWindowsLogin.Create() 
-    $SQLWindowsLogin.AddToRole("sysadmin")
-}
-
-function sql-delete-login {
-    Param(
-        $name,
-        [string] $user = $global:sqlUser,
-        [string] $pass = $Global:sqlPass
-    )
-    _sql-load-module
-
-    $sqlServer = New-Object Microsoft.SqlServer.Management.Smo.Server -ArgumentList '.'
-    $ToDrop = $sqlServer.Logins[$name]
-    $ToDrop.Drop()
 }

@@ -1,4 +1,4 @@
-$global:hostsPath = "$($env:windir)\system32\Drivers\etc\hosts"
+$Script:hostsPath = "$($env:windir)\system32\Drivers\etc\hosts"
 
 # Get the Handle.exe tool by Sysinternals
 $handleLink = "https://download.sysinternals.com/files/Handle.zip"
@@ -62,8 +62,8 @@ execute-native "& `"$path`" workspaces `"C:\dummySubApp`""
 function execute-native ($command, [array]$successCodes) {
     $output = Invoke-Expression $command
     
-    if ($Global:LASTEXITCODE -and -not ($successCodes -and $successCodes.Count -gt 0 -and $successCodes.Contains($Global:LASTEXITCODE))) {
-        throw "Error executing native operation ($command). Last exit code was $Global:LASTEXITCODE. Native call output: $output`n"
+    if ($Script:LASTEXITCODE -and -not ($successCodes -and $successCodes.Count -gt 0 -and $successCodes.Contains($Script:LASTEXITCODE))) {
+        throw "Error executing native operation ($command). Last exit code was $Script:LASTEXITCODE. Native call output: $output`n"
     }
     else {
         $output
@@ -101,14 +101,14 @@ function unlock-allFiles ($path) {
 }
 
 function Add-ToHostsFile ($address, $hostname) {
-    If ((Get-Content $Global:hostsPath) -notcontains "$address $hostname") {
-        Add-Content -Encoding utf8 $Global:hostsPath "$address $hostname" -ErrorAction Stop
+    If ((Get-Content $Script:hostsPath) -notcontains "$address $hostname") {
+        Add-Content -Encoding utf8 $Script:hostsPath "$address $hostname" -ErrorAction Stop
     }
 }
 
 function Remove-FromHostsFile ($hostname) {
     $address = $null
-    (Get-Content $Global:hostsPath) | ForEach-Object {
+    (Get-Content $Script:hostsPath) | ForEach-Object {
         $found = $_ -match "^(?<address>.*?) $hostname$"
         if ($found) {
             $address = $Matches.address
@@ -119,9 +119,9 @@ function Remove-FromHostsFile ($hostname) {
         throw 'Domain not found in hosts file.'
     }
 
-    (Get-Content $global:hostsPath) |
+    (Get-Content $Script:hostsPath) |
         Where-Object { $_ -notmatch ".*? $hostname$" } |
-        Out-File $global:hostsPath -Force -Encoding utf8 -ErrorAction Stop
+        Out-File $Script:hostsPath -Force -Encoding utf8 -ErrorAction Stop
 
     return $address
 }
