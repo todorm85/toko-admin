@@ -107,6 +107,8 @@ function Add-ToHostsFile ($address, $hostname) {
 }
 
 function Remove-FromHostsFile ($hostname) {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "", Justification="False positive")]
+
     $address = $null
     (Get-Content $Script:hostsPath) | ForEach-Object {
         $found = $_ -match "^(?<address>.*?) $hostname$"
