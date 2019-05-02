@@ -11,13 +11,15 @@
     VariablesToExport = @()
     AliasesToExport   = '*'
     ModuleVersion     = '0.1.3'
-    RequiredModules   = @(@{ModuleName = 'toko-posh-dev-tools'; RequiredVersion = '0.1.0' })
+    RequiredModules   = @(
+        @{ModuleName = 'toko-posh-dev-tools'; ModuleVersion = '0.1.0'; MaximumVersion = '0.*' }
+    )
     PrivateData       = @{
         PSData = @{
             ProjectUri   = 'https://github.com/todorm85/toko-admin'
             ReleaseNotes = @'
 ## 0.1.3
-Add configuration
+Add user configuration for tfPath
 ## 0.1.2
 Fixed unlocking files
 ## 0.1.1
