@@ -1,4 +1,9 @@
 function _sql-load-module {
+    $modAvailable = $mod = Get-Module SQLPS -ListAvailable
+    if (!$modAvailable) {
+        throw "SQLPS module not found, make sure sql server management studio is installed."
+    }
+    
     $mod = Get-Module SQLPS
     if ($null -eq $mod -or '' -eq $mod) {
         $oldLocation = Get-Location

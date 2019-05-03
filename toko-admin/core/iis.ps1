@@ -1,4 +1,9 @@
 function _iis-load-webAdministrationModule () {
+    $moduleAvailable = Get-Module WebAdministration -ListAvailable
+    if (!$moduleAvailable) {
+        throw "WebAdministration module was not found. Make sure IIS role is eneabled."
+    }
+    
     $mod = Get-Module WebAdministration
     if ($null -eq $mod -or '' -eq $mod) {
         Import-Module WebAdministration
