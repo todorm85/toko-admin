@@ -59,15 +59,4 @@ class SqlClient {
     }
 }
 
-function get-sqlClient {
-    Param(
-        [Parameter(Mandatory = $true)][string]$user,
-        [Parameter(Mandatory = $true)][string]$pass,
-        [Parameter(Mandatory = $true)][string]$server
-    )
-
-    $cls = [SqlClient]::new($user, $pass, $server)
-    $cls
-}
-
 Export-ModuleMember -Function * -Alias *
