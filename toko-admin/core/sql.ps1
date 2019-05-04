@@ -18,7 +18,8 @@ function sql-delete-database {
     Param (
         [Parameter(Mandatory = $true)][string] $dbName,
         [string] $user,
-        [string] $pass
+        [string] $pass,
+        [string] $sqlServerInstance
     )
 
     _sql-load-module
@@ -37,7 +38,8 @@ function sql-rename-database {
         [Parameter(Mandatory = $true)][string] $oldName,
         [Parameter(Mandatory = $true)][string] $newName,
         [string] $user,
-        [string] $pass
+        [string] $pass,
+        [string] $sqlServerInstance
     )
 
     _sql-load-module
@@ -55,7 +57,8 @@ function sql-rename-database {
 function sql-get-dbs {
     Param (
         [Parameter(Mandatory=$true)][string] $user,
-        [Parameter(Mandatory=$true)][string] $pass
+        [Parameter(Mandatory=$true)][string] $pass,
+        [string] $sqlServerInstance
     )
 
     _sql-load-module
@@ -68,7 +71,8 @@ function sql-get-dbs {
 function sql-get-items {
     Param($dbName, $tableName, $selectFilter, $whereFilter,
         [string] $user,
-        [string] $pass
+        [string] $pass,
+        [string] $sqlServerInstance
     )
 
     _sql-load-module
@@ -84,7 +88,8 @@ function sql-get-items {
 function sql-update-items {
     Param($dbName, $tableName, $value, $whereFilter,
         [string] $user,
-        [string] $pass
+        [string] $pass,
+        [string] $sqlServerInstance
     )
 
     _sql-load-module
@@ -100,7 +105,8 @@ function sql-update-items {
 function sql-insert-items {
     Param($dbName, $tableName, $columns, $values,
     [string] $user,
-    [string] $pass)
+    [string] $pass,
+    [string] $sqlServerInstance)
 
     _sql-load-module
 
@@ -114,7 +120,8 @@ function sql-insert-items {
 function sql-delete-items {
     Param($dbName, $tableName, $whereFilter,
     [string] $user,
-    [string] $pass)
+    [string] $pass,
+    [string] $sqlServerInstance)
 
     _sql-load-module
 
@@ -127,12 +134,13 @@ function sql-test-isDbNameDuplicate {
     Param(
         [string]$dbName,
         [string] $user,
-        [string] $pass
+        [string] $pass,
+        [string] $sqlServerInstance
         )
 
     _sql-load-module
 
-    $existingDbs = @(sql-get-dbs -user $user -pass $pass)
+    $existingDbs = @(sql-get-dbs -user $user -pass $pass -sqlServerInstance $sqlServerInstance)
     $exists = $false
     ForEach ($db in $existingDbs) {
         if ($db.name -eq $dbName) {
@@ -149,7 +157,8 @@ function sql-copy-db {
         [string]$SourceDBName, 
         [string]$targetDbName,
         [string] $user,
-        [string] $pass
+        [string] $pass,
+        [string] $sqlServerInstance
     )
     #import SQL Server module
     _sql-load-module
