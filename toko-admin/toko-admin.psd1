@@ -10,9 +10,9 @@
     CmdletsToExport   = @()
     VariablesToExport = @()
     AliasesToExport   = '*'
-    ModuleVersion     = '0.2.0'
+    ModuleVersion     = '0.2.1'
     RequiredModules   = @(
-        @{ModuleName = 'toko-posh-dev-tools'; ModuleVersion = '0.1.0'; MaximumVersion = '0.*' }
+        @{ModuleName = 'toko-posh-dev-tools'; ModuleVersion = '0.1.0'; MaximumVersion = '0.*.*' }
     )
     PrivateData       = @{
         PSData = @{
