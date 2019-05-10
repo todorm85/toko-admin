@@ -62,8 +62,8 @@ execute-native "& `"$path`" workspaces `"C:\dummySubApp`""
 function execute-native ($command, [array]$successCodes) {
     $output = Invoke-Expression $command
     
-    if ($Script:LASTEXITCODE -and -not ($successCodes -and $successCodes.Count -gt 0 -and $successCodes.Contains($Script:LASTEXITCODE))) {
-        throw "Error executing native operation ($command). Last exit code was $Script:LASTEXITCODE. Native call output: $output`n"
+    if ($lastexitcode -and -not ($successCodes -and $successCodes.Count -gt 0 -and $successCodes.Contains($lastexitcode))) {
+        throw "Error executing native operation ($command). Last exit code was $lastexitcode. Native call output: $output`n"
     }
     else {
         $output

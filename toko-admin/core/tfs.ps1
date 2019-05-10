@@ -148,7 +148,7 @@ function tfs-get-latestChanges {
         $output = execute-native "& `"$(_get-tfPath)`" get" -successCodes @(1)
     }
 
-    if ($Script:LASTEXITCODE -eq 1) {
+    if ($LASTEXITCODE -eq 1) {
         $output -match ".*?(?<conflicts>\d+) conflicts, \d+ warnings, (?<errors>\d+) errors.*"
         $conflictsCount = 0
         if ($Matches.conflicts) {
@@ -235,7 +235,7 @@ function tfs-get-branchPath {
     }
     catch {
         Set-Location $oldLocation
-        if ($Script:LASTEXITCODE -eq 100) {
+        if ($LASTEXITCODE -eq 100) {
             $wsInfo = ''
         } else {
             throw $_
