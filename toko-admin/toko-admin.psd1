@@ -21,6 +21,7 @@
 ## 0.2.1
 Fixes
     Errors from native operations improper error code handling when nesting scopes of modules.
+    
 ## 0.2.0
 Features
     Added SqlClient object API
