@@ -18,7 +18,7 @@
         PSData = @{
             ProjectUri   = 'https://github.com/todorm85/toko-admin'
             ReleaseNotes = @'
-## 0.3.0 (unreleased)
+## 0.3.0
 Feature
     iis-find-site
     Find site name by path.
