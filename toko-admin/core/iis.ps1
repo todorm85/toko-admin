@@ -281,3 +281,17 @@ function iis-get-binding {
     $domain = $bindingInfo.Split(':')[2]
     return @{port = $port; domain = $domain; }
 }
+
+function iis-find-site {
+    Param(
+        [string]$physicalPath
+    )
+
+    _iis-load-webAdministrationModule
+    $availableSites = @(Get-ChildItem -Path "IIS:\Sites")
+    ForEach ($site in $availableSites) {
+        if ($site.physicalPath.ToLower() -eq $physicalPath.ToLower()) {
+            return $site.name
+        }
+    }
+}
