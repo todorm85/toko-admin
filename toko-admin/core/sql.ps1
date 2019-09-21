@@ -210,3 +210,47 @@ function sql-copy-db {
     #you can use the TransferData method
     $ObjTransfer.TransferData()
 }
+
+class SqlClient {
+    [string] hidden $user
+    [string] hidden $pass
+    [string] hidden $server
+
+    [void] Configure([string]$user, [string]$pass, [string]$server) {
+        # _sql-load-module
+        $this.user = $user
+        $this.pass = $pass
+        $this.server = $server
+    }
+
+    [System.Object[]] GetDbs() {
+        return sql-get-dbs -user $this.user -pass $this.pass -sqlServerInstance $this.server
+    }
+
+    [void] CopyDb([string] $source, [string] $target) {
+        sql-copy-db -SourceDBName $source -targetDbName $target -user $this.user -pass $this.pass -sqlServerInstance $this.server
+    }
+
+    [void] Delete([string]$dbName) {
+        sql-delete-database -dbName $dbName -user $this.user -pass $this.pass -sqlServerInstance $this.server
+    }
+
+    [System.Object[]] GetItems([string]$db, [string]$table, [string]$where, [string]$select) {
+        return sql-get-items -dbName $db -tableName $table -selectFilter $select -whereFilter $where -user $this.user -pass $this.pass -sqlServerInstance $this.server
+    }
+
+    [void] UpdateItems([string]$db, [string]$table, [string]$where, [string]$value) {
+        sql-update-items -dbName $db -tableName $table -value $value -whereFilter $where -user $this.user -pass $this.pass -sqlServerInstance $this.server
+    }
+    
+    [void] InsertItems([string]$db, [string]$table, [string]$columns, [string]$values) {
+        sql-insert-items -dbName $db -tableName $table -values $values -columns $columns -user $this.user -pass $this.pass -sqlServerInstance $this.server
+    }
+
+    [bool] IsDuplicate([string]$dbName) {
+        return sql-test-isDbNameDuplicate -dbName $dbName -user $this.user -pass $this.pass -sqlServerInstance $this.server
+    }
+}
+
+$sql = [SqlClient]::new()
+$Global:tokoAdmin | Add-Member -MemberType NoteProperty -TypeName SqlClient -Name 'sql' -Value $sql

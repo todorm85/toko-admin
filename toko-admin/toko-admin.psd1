@@ -10,7 +10,7 @@
     CmdletsToExport   = @()
     VariablesToExport = @()
     AliasesToExport   = '*'
-    ModuleVersion     = '0.3.0'
+    ModuleVersion     = '1.0.0'
     RequiredModules   = @(
         @{ModuleName = 'toko-posh-dev-tools'; ModuleVersion = '0.1.0'; MaximumVersion = '0.*' }
     )
@@ -18,6 +18,8 @@
         PSData = @{
             ProjectUri   = 'https://github.com/todorm85/toko-admin'
             ReleaseNotes = @'
+## 1.0.0
+    New api via global object
 ## 0.3.0
 Feature
     iis-find-site

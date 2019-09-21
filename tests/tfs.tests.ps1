@@ -129,33 +129,33 @@ InModuleScope toko-admin {
         $anyPath = "\"
 
         It "does not throw when native call succeeds without errors" {
-            Mock execute-native { $LASTEXITCODE = 0; return "ontend\SocialShare  ---- Summary: 0 conflicts, 0 warnings, 0 errors ----" }
+            Mock execute-native { $GLOBAL:LASTEXITCODE = 0; return "ontend\SocialShare  ---- Summary: 0 conflicts, 0 warnings, 0 errors ----" }
             tfs-get-latestChanges $anyPath
         }
         It "returns output when native call succeeds without errors" {
             $mockedTfOutput = "ontend\SocialShare  ---- Summary: 0 conflicts, 0 warnings, 0 errors ----"
-            Mock execute-native { $LASTEXITCODE = 0; return $mockedTfOutput }
+            Mock execute-native { $GLOBAL:LASTEXITCODE = 0; return $mockedTfOutput }
             $output = tfs-get-latestChanges $anyPath
             $output | Should -be $mockedTfOutput
         }
         It "does not throw when only warnings" {
-            Mock execute-native { $LASTEXITCODE = 1; return "ontend\SocialShare  ---- Summary: 0 conflicts, 1 warnings, 0 errors ----" }
+            Mock execute-native { $GLOBAL:LASTEXITCODE = 1; return "ontend\SocialShare  ---- Summary: 0 conflicts, 1 warnings, 0 errors ----" }
             tfs-get-latestChanges $anyPath
          }
         It "throws when conflicts" { 
-            Mock execute-native { $LASTEXITCODE = 1; return "ontend\SocialShare  ---- Summary: 1 conflicts, 0 warnings, 0 errors ----" }
+            Mock execute-native { $GLOBAL:LASTEXITCODE = 1; return "ontend\SocialShare  ---- Summary: 1 conflicts, 0 warnings, 0 errors ----" }
             { tfs-get-latestChanges $anyPath } | Should -Throw "There were 1 conflicts when getting latest."
         }
         It "throws when conflicts and warnings" { 
-            Mock execute-native { $LASTEXITCODE = 1; return "ontend\SocialShare  ---- Summary: 1 conflicts, 1 warnings, 0 errors ----" }
+            Mock execute-native { $GLOBAL:LASTEXITCODE = 1; return "ontend\SocialShare  ---- Summary: 1 conflicts, 1 warnings, 0 errors ----" }
             { tfs-get-latestChanges $anyPath } | Should -Throw "There were 1 conflicts when getting latest."
         }
         It "throws when errors" { 
-            Mock execute-native { $LASTEXITCODE = 1; return "ontend\SocialShare  ---- Summary: 0 conflicts, 0 warnings, 1 errors ----" }
+            Mock execute-native { $GLOBAL:LASTEXITCODE = 1; return "ontend\SocialShare  ---- Summary: 0 conflicts, 0 warnings, 1 errors ----" }
             {tfs-get-latestChanges $anyPath} | Should -Throw "There were 1 errors when getting latest."
         }
         It "throws when errors and warnings" { 
-            Mock execute-native { $LASTEXITCODE = 1; return "ontend\SocialShare  ---- Summary: 0 conflicts, 3 warnings, 5 errors ----" }
+            Mock execute-native { $GLOBAL:LASTEXITCODE = 1; return "ontend\SocialShare  ---- Summary: 0 conflicts, 3 warnings, 5 errors ----" }
             {tfs-get-latestChanges $anyPath} | Should -Throw "There were 5 errors when getting latest."
         }
     }
