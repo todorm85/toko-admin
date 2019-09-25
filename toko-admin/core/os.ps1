@@ -59,7 +59,8 @@ function os-test-isPortFree {
 $path = "tf.exe"
 execute-native "& `"$path`" workspaces `"C:\dummySubApp`""
 #>
-function execute-native ($command, [array]$successCodes) {
+function execute-native ([string]$command, [array]$successCodes) {
+    $command = $command + " 2>&1"
     $output = Invoke-Expression $command
     
     if ($lastexitcode -and -not ($successCodes -and $successCodes.Count -gt 0 -and $successCodes.Contains($lastexitcode))) {
