@@ -10,7 +10,7 @@
     CmdletsToExport   = @()
     VariablesToExport = @()
     AliasesToExport   = '*'
-    ModuleVersion     = '1.0.0'
+    ModuleVersion     = '1.1.0'
     RequiredModules   = @(
         @{ModuleName = 'toko-posh-dev-tools'; ModuleVersion = '0.1.0'; MaximumVersion = '0.*' }
     )
@@ -18,35 +18,32 @@
         PSData = @{
             ProjectUri   = 'https://github.com/todorm85/toko-admin'
             ReleaseNotes = @'
-## 1.0.0
-    New api via global object
-## 0.3.0
-Feature
-    iis-find-site
-    Find site name by path.
-## 0.2.1
-Fixes
-    Errors from native operations improper error code handling when nesting scopes of modules.
-    
-## 0.2.0
-Features
-    Added SqlClient object API
-Bugfixes
-    Removed errors when unlocking files
-
-## 0.1.3
-Add user configuration for tfPath
-Fix: default credentials not found for sql and server name for TFS
-
-## 0.1.2
-Fixed unlocking files
-
-## 0.1.1
-Ability to quickly add entries to hosts file. Add-ToHostsFile and Remove-FromHostsFile
-
-## 0.1.0
-Initial release containing commonly used administration tasks on windows automated.
-Contains scripts for MSSQL, IIS, Windows, Nuget, TFS.
+            1.1.0
+                TF.exe error stream is redirected to powershell error stream.
+            1.0.0
+                New api via global object
+            0.3.0
+                Feature
+                    iis-find-site
+                    Find site name by path.
+            0.2.1
+                Fixes
+                    Errors from native operations improper error code handling when nesting scopes of modules.
+            0.2.0
+                Features
+                    Added SqlClient object API
+                Bugfixes
+                    Removed errors when unlocking files
+            0.1.3
+                Add user configuration for tfPath
+                Fix: default credentials not found for sql and server name for TFS
+            0.1.2
+                Fixed unlocking files
+            0.1.1
+                Ability to quickly add entries to hosts file. Add-ToHostsFile and Remove-FromHostsFile
+            0.1.0
+                Initial release containing commonly used administration tasks on windows automated.
+                Contains scripts for MSSQL, IIS, Windows, Nuget, TFS.
 '@
         }
     }
