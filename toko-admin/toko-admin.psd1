@@ -10,7 +10,7 @@
     CmdletsToExport   = @()
     VariablesToExport = @()
     AliasesToExport   = '*'
-    ModuleVersion     = '1.1.0'
+    ModuleVersion     = '1.1.1'
     RequiredModules   = @(
         @{ModuleName = 'toko-posh-dev-tools'; ModuleVersion = '0.1.0'; MaximumVersion = '0.*' }
     )
@@ -18,6 +18,8 @@
         PSData = @{
             ProjectUri   = 'https://github.com/todorm85/toko-admin'
             ReleaseNotes = @'
+            1.1.1
+                Getting branch sometimes gets fake result for specific location where it should return none.
             1.1.0
                 TF.exe error stream is redirected to powershell error stream.
             1.0.0
