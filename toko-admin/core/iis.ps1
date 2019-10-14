@@ -177,6 +177,7 @@ function iis-test-isSiteNameDuplicate {
         [string]$name
     )
 
+    _iis-load-webAdministrationModule
     $availableSites = @(Get-ChildItem -Path "IIS:\Sites")
     $isDuplicateSite = $false
     ForEach ($site in $availableSites) {
