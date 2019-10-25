@@ -10,7 +10,7 @@
     CmdletsToExport   = @()
     VariablesToExport = @()
     AliasesToExport   = '*'
-    ModuleVersion     = '1.1.2'
+    ModuleVersion     = '1.1.3'
     RequiredModules   = @(
         @{ModuleName = 'toko-posh-dev-tools'; ModuleVersion = '0.1.0'; MaximumVersion = '0.*' }
     )
@@ -18,6 +18,8 @@
         PSData = @{
             ProjectUri   = 'https://github.com/todorm85/toko-admin'
             ReleaseNotes = @'
+            1.1.3
+                iis-find-site now respects subApps
             1.1.2
                 Fixed not found IIS drive when getting all sites
             1.1.1

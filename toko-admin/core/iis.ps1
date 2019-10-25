@@ -295,4 +295,11 @@ function iis-find-site {
             return $site.name
         }
     }
+
+    Get-WebApplication | % {
+        if ($_.PhysicalPath.ToLower() -eq $physicalPath.ToLower()) {
+            $parent = $_.GetParentElement()
+            return $parent.GetAttribute('name').Value
+        }
+    }
 }
